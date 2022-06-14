@@ -2496,38 +2496,52 @@ ui_Layout.prototype = $extend(h2d_Object.prototype,{
 							w = Math.min(_gthis.rowWidth.max,w) | 0;
 						}
 						var nextMain;
+						var nextMain1;
 						if(child[0].container.layout._hx_index == 1 && child[0].p.constraintHeight != -1) {
-							nextMain = 0;
+							nextMain1 = 0;
 						} else if(child[0].container.layout._hx_index != 1 && child[0].p.constraintWidth != -1) {
-							nextMain = 0;
+							nextMain1 = 0;
 						} else {
 							var _g = child[0].container.layout._hx_index == 1 ? child[0].p.size.maxHeight : child[0].p.size.maxWidth;
 							if(_g == null) {
 								var _g1 = child[0].container.layout._hx_index == 1 ? child[0].p.size.minHeight : child[0].p.size.minWidth;
 								if(_g1 == null) {
-									nextMain = 0;
+									nextMain1 = 0;
 								} else if(_g1._hx_index == 2) {
 									var v = _g1.v;
-									nextMain = v;
+									nextMain1 = v;
 								} else {
-									nextMain = 0;
+									nextMain1 = 0;
 								}
 							} else if(_g._hx_index == 2) {
 								var v = _g.v;
-								nextMain = v;
+								nextMain1 = v;
 							} else {
 								var _g = child[0].container.layout._hx_index == 1 ? child[0].p.size.minHeight : child[0].p.size.minWidth;
 								if(_g == null) {
-									nextMain = 0;
+									nextMain1 = 0;
 								} else if(_g._hx_index == 2) {
 									var v = _g.v;
-									nextMain = v;
+									nextMain1 = v;
 								} else {
-									nextMain = 0;
+									nextMain1 = 0;
 								}
 							}
 						}
-						if(0 == nextMain) {
+						if(0 == nextMain1) {
+							var _g = child[0].p.size.minWidth;
+							if(_g == null) {
+								nextMain = false;
+							} else if(_g._hx_index == 0) {
+								var _g1 = _g.v;
+								nextMain = true;
+							} else {
+								nextMain = false;
+							}
+						} else {
+							nextMain = false;
+						}
+						if(nextMain) {
 							crossDim = Math.max(crossDim,w) | 0;
 						}
 						ch = Math.max(ch,mx) | 0;
