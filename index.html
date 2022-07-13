@@ -105,7 +105,7 @@
             var b64_src = btoa(document.getElementById('source_markup').value);
             var b64_style = btoa(document.getElementById('source_css').value);
             
-            var shareLink = location.protocol + "//" + location.host + "?src="+encodeURIComponent(b64_src)+"&css="+encodeURIComponent(b64_style);
+            var shareLink = location.protocol + "//" + location.host + location.pathname + "?src="+encodeURIComponent(b64_src)+"&css="+encodeURIComponent(b64_style);
             navigator.clipboard.writeText(shareLink).then(() => {
                 alert("Copied to clipboard");
             }).catch(() => {
