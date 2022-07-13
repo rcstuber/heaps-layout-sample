@@ -26,10 +26,11 @@
             height: 100%;
             background: rgb(52, 52, 52);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         .editor {
             width:100%;
-            height: 50%;
             background: #171717;
             border: solid 1px #363636;
             padding: 25px;
@@ -44,18 +45,26 @@
             background: #2d2d2d;
             color: white;
         }
+        #inputs {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
         #source_markup {
-            height: 60%;
+            flex: 3;
             overflow-y:scroll;
         }
         #source_css {
+            flex: 1;
             overflow-y:scroll;
         }
-        #hint {
-            position: absolute;
+        #opts {
+            flex-direction: column;
             bottom: 0px;
-            height: 35px;
             width: 100%;
+            display: flex;
+        }
+        #hint {
             color: white;
             font-size: 8pt;
             text-align: center;
@@ -64,18 +73,45 @@
             line-height: 35px;
             background: #585858;
         }
+        #share {
+            padding: 5px;
+            background: #ff961f;
+            color: #000000;
+            font-size: 10pt;
+            font-weight: 500;
+            text-align: center;
+        }
+        #share:hover {
+            background: #fc8a07;
+        }
     </style>
 </head>
 <body>
     <canvas id="webgl"></canvas>
     <script type="text/javascript" src="sample.js"></script>
     <div id="sidebar">
-        <select id="files"/>
-        <textarea id="source_markup" class="editor"></textarea>
-        <textarea id="source_css" class="editor"></textarea>
-        <div id="hint">Press CTRL/CMD + S to refresh</div>
+        <select id="files"></select>
+        <div id="inputs">
+            <textarea id="source_markup" class="editor"></textarea>
+            <textarea id="source_css" class="editor"></textarea>
+        </div>
+        <div id="opts">
+            <div id="hint">Press CTRL/CMD + S to refresh</div>
+            <button id="share">Share</button>
+        </div>
     </div>
     <script>
+        document.getElementById('share').addEventListener('click',() => {
+            var b64_src = btoa(document.getElementById('source_markup').value);
+            var b64_style = btoa(document.getElementById('source_css').value);
+            
+            var shareLink = location.protocol + "//" + location.host + "?src="+encodeURIComponent(b64_src)+"&css="+encodeURIComponent(b64_style);
+            navigator.clipboard.writeText(shareLink).then(() => {
+                alert("Copied to clipboard");
+            }).catch(() => {
+                alert("Could not copy link to clipboard");
+            });
+        });
         for(el of document.getElementsByTagName('textarea')) {
             el.addEventListener('keydown', function(e) {
                 if (e.key == 'Tab') {
