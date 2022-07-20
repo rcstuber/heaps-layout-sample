@@ -62614,66 +62614,23 @@ hpl__$Layout_LayoutItem.calculate = function(this1) {
 			box = false;
 		}
 		var box1 = this1.p.calcSize(box);
+		this1.width = box1.width;
+		this1.height = box1.height;
 		var value = this1.o;
-		var obj2d = ((value) instanceof h2d_Object) ? value : null;
-		var tmp;
-		if(null != obj2d) {
-			var tmp1;
-			if(this1.container.layout._hx_index == 1 && this1.p.constraintHeight != -1) {
-				tmp1 = 0;
-			} else if(this1.container.layout._hx_index != 1 && this1.p.constraintWidth != -1) {
-				tmp1 = 0;
-			} else {
-				var _g = this1.container.layout._hx_index == 1 ? this1.p.size.height : this1.p.size.width;
-				if(_g == null) {
-					var _g1 = this1.container.layout._hx_index == 1 ? this1.p.size.minHeight : this1.p.size.minWidth;
-					if(_g1 == null) {
-						tmp1 = 0;
-					} else if(_g1._hx_index == 2) {
-						var v = _g1.v;
-						tmp1 = v;
-					} else {
-						tmp1 = 0;
-					}
-				} else if(_g._hx_index == 2) {
-					var v = _g.v;
-					tmp1 = v;
-				} else {
-					var _g = this1.container.layout._hx_index == 1 ? this1.p.size.minHeight : this1.p.size.minWidth;
-					if(_g == null) {
-						tmp1 = 0;
-					} else if(_g._hx_index == 2) {
-						var v = _g.v;
-						tmp1 = v;
-					} else {
-						tmp1 = 0;
-					}
-				}
-			}
-			tmp = 0 == tmp1;
-		} else {
-			tmp = false;
-		}
-		if(tmp) {
+		var txt = ((value) instanceof h2d_Text) ? value : null;
+		if(null != txt) {
 			if(box1.maxWidth > 0) {
-				var value = this1.o;
-				var txt = ((value) instanceof h2d_Text) ? value : null;
-				if(null != txt) {
-					txt.set_maxWidth(box1.maxWidth);
-				}
+				txt.set_maxWidth(box1.maxWidth);
 			}
 			var b = hpl_Layout.tmpBounds;
 			b.xMin = 1e20;
 			b.yMin = 1e20;
 			b.xMax = -1e20;
 			b.yMax = -1e20;
-			obj2d.getBoundsRec(obj2d.parent,b,false);
+			txt.getBoundsRec(txt.parent,b,true);
 			var sz = b;
 			this1.width = sz.xMax - sz.xMin | 0;
 			this1.height = sz.yMax - sz.yMin | 0;
-		} else {
-			this1.width = box1.width;
-			this1.height = box1.height;
 		}
 		hpl__$Layout_LayoutItem.applySize(this1);
 	}
@@ -62684,7 +62641,7 @@ hpl__$Layout_LayoutItem.getSize = function(this1,c) {
 	b.yMin = 1e20;
 	b.xMax = -1e20;
 	b.yMax = -1e20;
-	c.getBoundsRec(c.parent,b,false);
+	c.getBoundsRec(c.parent,b,true);
 	return b;
 };
 hpl__$Layout_LayoutItem.applySize = function(this1) {
@@ -62693,6 +62650,13 @@ hpl__$Layout_LayoutItem.applySize = function(this1) {
 	if(null != bmp) {
 		bmp.set_width(this1.width);
 		bmp.set_height(this1.height);
+		return;
+	}
+	var value = this1.o;
+	var flow = ((value) instanceof h2d_Flow) ? value : null;
+	if(null != flow) {
+		flow.set_minWidth(this1.width);
+		flow.set_minHeight(this1.height);
 		return;
 	}
 	var value = this1.o;
