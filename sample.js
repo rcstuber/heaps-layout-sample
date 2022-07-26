@@ -1885,6 +1885,8 @@ hpl_Layout.prototype = $extend(h2d_Object.prototype,{
 					case 4:
 						anch = dim;
 						break;
+					default:
+						anch = 0;
 					}
 					return anch | 0;
 				};
@@ -1904,7 +1906,7 @@ hpl_Layout.prototype = $extend(h2d_Object.prototype,{
 					while(item.hasNext()) {
 						var item1 = item.next();
 						var fallback = item1.container.contentAlignment.main;
-						if((null != item1.p.alignment.main ? item1.p.alignment.main : null != fallback ? fallback : hpl_LayoutAlign.Start) == align && (item1.container.layout._hx_index == 1 ? item1.height : item1.width) >= _gthis.minItemSize) {
+						if(hpl__$Layout_LayoutItem.alignContext(item1,null != item1.p.alignment.main ? item1.p.alignment.main : null != fallback ? fallback : hpl_LayoutAlign.Start) == align && (item1.container.layout._hx_index == 1 ? item1.height : item1.width) >= _gthis.minItemSize) {
 							if(items.length > 0) {
 								dd += space;
 							}
@@ -1954,6 +1956,8 @@ hpl_Layout.prototype = $extend(h2d_Object.prototype,{
 						case 4:
 							v = count > 1 ? val + (i + 1) * (edge - total) / (count + 1) : val + (edge - total) / 2;
 							break;
+						default:
+							v = val;
 						}
 						var v1 = v | 0;
 						var x;
@@ -2389,10 +2393,10 @@ hpl_Layout.prototype = $extend(h2d_Object.prototype,{
 							var maxCrossSize = (_g6 == null ? false : _g6._hx_index == 3) ? contentCross : innerCross;
 							var val = (item.container.layout._hx_index == 1 ? item.o.x : item.o.y) | 0;
 							var fallback = item.container.contentAlignment.cross;
-							var align = null != item.p.alignment.cross ? item.p.alignment.cross : null != fallback ? fallback : hpl_LayoutAlign.Start;
+							var align = hpl__$Layout_LayoutItem.alignContext(item,null != item.p.alignment.cross ? item.p.alignment.cross : null != fallback ? fallback : hpl_LayoutAlign.Start,true);
 							var size = item.container.layout._hx_index == 1 ? item.width : item.height;
 							var fallback1 = item.container.contentAlignment.cross;
-							var anchor = anch[0](null != item.p.alignment.cross ? item.p.alignment.cross : null != fallback1 ? fallback1 : hpl_LayoutAlign.Start,1 == numRows ? maxCrossSize : fill);
+							var anchor = anch[0](hpl__$Layout_LayoutItem.alignContext(item,null != item.p.alignment.cross ? item.p.alignment.cross : null != fallback1 ? fallback1 : hpl_LayoutAlign.Start,true),1 == numRows ? maxCrossSize : fill);
 							var v4;
 							switch(align._hx_index) {
 							case 0:
@@ -2410,6 +2414,8 @@ hpl_Layout.prototype = $extend(h2d_Object.prototype,{
 							case 4:
 								v4 = val + (anchor - size) / 2;
 								break;
+							default:
+								v4 = val;
 							}
 							var v5 = v4 | 0;
 							var x1;
@@ -4018,7 +4024,7 @@ Sample.prototype = $extend(hxd_App.prototype,{
 		this.style.set_allowInspect(true);
 		this.style.addObject(this.screen);
 		this.onResize();
-		this.loadFromFile(hxd_Res.get_loader().loadCache("tutorial.json",hxd_res_Resource),15);
+		this.loadFromFile(hxd_Res.get_loader().loadCache("tutorial.json",hxd_res_Resource));
 		var sharedSource = null;
 		var sharedStyle = "";
 		var parts = HxOverrides.substr($global.location.search,1,null).split("&");
@@ -11075,19 +11081,27 @@ hpl_domkit_LayoutCssParser.prototype = $extend(h2d_domkit_CustomParser.prototype
 		switch(_g) {
 		case "auto":
 			return null;
+		case "bottom":
+			return hpl_LayoutAlign.Bottom;
 		case "end":
 			return hpl_LayoutAlign.End;
 		case "even":
 			return hpl_LayoutAlign.Even;
+		case "left":
+			return hpl_LayoutAlign.Left;
 		case "middle":
 			return hpl_LayoutAlign.Middle;
+		case "right":
+			return hpl_LayoutAlign.Right;
 		case "spread":
 			return hpl_LayoutAlign.Spread;
 		case "start":
 			return hpl_LayoutAlign.Start;
+		case "top":
+			return hpl_LayoutAlign.Top;
 		default:
 			var x = _g;
-			return this.invalidProp(x + " should be auto|start|end|middle|even|spread");
+			return this.invalidProp(x + " should be auto|start|end|middle|even|spread|right(horizontal)|left(horizontal)|top(vertical)|bottom(vertical)");
 		}
 	}
 	,parseAlignment2d: function(value) {
@@ -62064,9 +62078,13 @@ var hpl_LayoutAlign = $hxEnums["hpl.LayoutAlign"] = { __ename__:true,__construct
 	,Middle: {_hx_name:"Middle",_hx_index:2,__enum__:"hpl.LayoutAlign",toString:$estr}
 	,Spread: {_hx_name:"Spread",_hx_index:3,__enum__:"hpl.LayoutAlign",toString:$estr}
 	,Even: {_hx_name:"Even",_hx_index:4,__enum__:"hpl.LayoutAlign",toString:$estr}
+	,Left: {_hx_name:"Left",_hx_index:5,__enum__:"hpl.LayoutAlign",toString:$estr}
+	,Right: {_hx_name:"Right",_hx_index:6,__enum__:"hpl.LayoutAlign",toString:$estr}
+	,Top: {_hx_name:"Top",_hx_index:7,__enum__:"hpl.LayoutAlign",toString:$estr}
+	,Bottom: {_hx_name:"Bottom",_hx_index:8,__enum__:"hpl.LayoutAlign",toString:$estr}
 };
-hpl_LayoutAlign.__constructs__ = [hpl_LayoutAlign.Start,hpl_LayoutAlign.End,hpl_LayoutAlign.Middle,hpl_LayoutAlign.Spread,hpl_LayoutAlign.Even];
-hpl_LayoutAlign.__empty_constructs__ = [hpl_LayoutAlign.Start,hpl_LayoutAlign.End,hpl_LayoutAlign.Middle,hpl_LayoutAlign.Spread,hpl_LayoutAlign.Even];
+hpl_LayoutAlign.__constructs__ = [hpl_LayoutAlign.Start,hpl_LayoutAlign.End,hpl_LayoutAlign.Middle,hpl_LayoutAlign.Spread,hpl_LayoutAlign.Even,hpl_LayoutAlign.Left,hpl_LayoutAlign.Right,hpl_LayoutAlign.Top,hpl_LayoutAlign.Bottom];
+hpl_LayoutAlign.__empty_constructs__ = [hpl_LayoutAlign.Start,hpl_LayoutAlign.End,hpl_LayoutAlign.Middle,hpl_LayoutAlign.Spread,hpl_LayoutAlign.Even,hpl_LayoutAlign.Left,hpl_LayoutAlign.Right,hpl_LayoutAlign.Top,hpl_LayoutAlign.Bottom];
 var hpl_LayoutSpace = $hxEnums["hpl.LayoutSpace"] = { __ename__:true,__constructs__:null
 	,ParentSpace: {_hx_name:"ParentSpace",_hx_index:0,__enum__:"hpl.LayoutSpace",toString:$estr}
 	,BoxSpace: {_hx_name:"BoxSpace",_hx_index:1,__enum__:"hpl.LayoutSpace",toString:$estr}
@@ -62462,23 +62480,11 @@ hpl__$Layout_LayoutItem.get_crossFlex = function(this1) {
 };
 hpl__$Layout_LayoutItem.get_align = function(this1) {
 	var fallback = this1.container.contentAlignment.main;
-	if(null != this1.p.alignment.main) {
-		return this1.p.alignment.main;
-	} else if(null != fallback) {
-		return fallback;
-	} else {
-		return hpl_LayoutAlign.Start;
-	}
+	return hpl__$Layout_LayoutItem.alignContext(this1,null != this1.p.alignment.main ? this1.p.alignment.main : null != fallback ? fallback : hpl_LayoutAlign.Start);
 };
 hpl__$Layout_LayoutItem.get_crossAlign = function(this1) {
 	var fallback = this1.container.contentAlignment.cross;
-	if(null != this1.p.alignment.cross) {
-		return this1.p.alignment.cross;
-	} else if(null != fallback) {
-		return fallback;
-	} else {
-		return hpl_LayoutAlign.Start;
-	}
+	return hpl__$Layout_LayoutItem.alignContext(this1,null != this1.p.alignment.cross ? this1.p.alignment.cross : null != fallback ? fallback : hpl_LayoutAlign.Start,true);
 };
 hpl__$Layout_LayoutItem.get_marginStart = function(this1) {
 	if(this1.container.layout._hx_index == 1) {
@@ -62506,6 +62512,44 @@ hpl__$Layout_LayoutItem.get_crossMarginEnd = function(this1) {
 		return this1.p.margins.bottom;
 	} else {
 		return this1.p.margins.right;
+	}
+};
+hpl__$Layout_LayoutItem.alignContext = function(this1,align,cross) {
+	if(cross == null) {
+		cross = false;
+	}
+	var hlayout = this1.container.layout._hx_index != 1;
+	switch(align._hx_index) {
+	case 5:
+		if(hlayout && !cross || !hlayout && cross) {
+			return hpl_LayoutAlign.Start;
+		} else {
+			return align;
+		}
+		break;
+	case 6:
+		if(hlayout && !cross || !hlayout && cross) {
+			return hpl_LayoutAlign.End;
+		} else {
+			return align;
+		}
+		break;
+	case 7:
+		if(!hlayout && !cross || hlayout && cross) {
+			return hpl_LayoutAlign.Start;
+		} else {
+			return align;
+		}
+		break;
+	case 8:
+		if(!hlayout && !cross || hlayout && cross) {
+			return hpl_LayoutAlign.End;
+		} else {
+			return align;
+		}
+		break;
+	default:
+		return align;
 	}
 };
 hpl__$Layout_LayoutItem.affectsCrossDimension = function(this1) {
